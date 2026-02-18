@@ -1,0 +1,2188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FilmBox - Movie Reviews</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4257b5 0%, #dc0b0b 100%);
+            color: #2d3748;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-box {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 50px 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-logo h1 {
+            color: #667eea;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .login-logo p {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+
+        .login-form-group {
+            margin-bottom: 25px;
+        }
+
+        .login-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .login-form-group input {
+            width: 100%;
+            padding: 15px;
+            background-color: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            color: #2d3748;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .login-form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .login-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .login-error {
+            background-color: #fed7d7;
+            color: #c53030;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .login-error.show {
+            display: block;
+        }
+
+        .login-info {
+            background-color: #bee3f8;
+            color: #2c5282;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 25px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .login-info strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .toggle-form {
+            text-align: center;
+            margin-top: 20px;
+            color: #718096;
+            font-size: 0.95rem;
+        }
+
+        .toggle-form a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .toggle-form a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .app-container {
+            display: none;
+        }
+
+        .app-container.active {
+            display: block;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 500;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .logo-section h1 {
+            color: #667eea;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .logo-section p {
+            color: #718096;
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+
+        .user-info {
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .username-display {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            background-color: #fc8181;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: #f56565;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 2px solid #e2e8f0;
+            color: #4a5568;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background-color: #f7fafc;
+            border-color: #cbd5e0;
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Page Sections */
+        .page-section {
+            display: none;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        .page-header {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-header h2 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+
+        /* Profile Page Styles */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .profile-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            margin: 0 auto 20px;
+            font-weight: 700;
+        }
+
+        .profile-username {
+            text-align: center;
+            color: #2d3748;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .profile-joined {
+            text-align: center;
+            color: #718096;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+        }
+
+        .profile-stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .profile-stat-item {
+            text-align: center;
+            padding: 15px;
+            background-color: #f7fafc;
+            border-radius: 12px;
+        }
+
+        .profile-stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .profile-stat-label {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .profile-section-title {
+            color: #2d3748;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            background-color: #f7fafc;
+            border-radius: 12px;
+            transition: background-color 0.3s;
+        }
+
+        .activity-item:hover {
+            background-color: #edf2f7;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            color: #2d3748;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .activity-date {
+            color: #a0aec0;
+            font-size: 0.85rem;
+        }
+
+        .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .favorite-item {
+            background-color: #f7fafc;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .favorite-item:hover {
+            background-color: #edf2f7;
+            transform: translateY(-3px);
+        }
+
+        .favorite-rating {
+            font-size: 1.5rem;
+            color: #fbbf24;
+            margin-bottom: 8px;
+        }
+
+        .favorite-title {
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 3px;
+        }
+
+        .favorite-year {
+            color: #a0aec0;
+            font-size: 0.85rem;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-label {
+            color: #4a5568;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .filter-select {
+            padding: 10px 20px;
+            background-color: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            color: #4a5568;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .filter-select:hover {
+            border-color: #cbd5e0;
+            background-color: white;
+        }
+
+        .filter-select:focus {
+            border-color: #667eea;
+        }
+
+        /* Floating Add Review Button */
+        .floating-add-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+            transition: transform 0.3s, box-shadow 0.3s;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .floating-add-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.8);
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { 
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: white;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s;
+        }
+
+        /* Close Button */
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #a0aec0;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .close-btn:hover {
+            background-color: #f7fafc;
+            color: #2d3748;
+        }
+
+        .modal-content h2 {
+            color: #667eea;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background-color: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            color: #2d3748;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 5px;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .star {
+            color: #cbd5e0;
+            transition: color 0.2s;
+        }
+
+        .star.active,
+        .star:hover {
+            color: #fbbf24;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        /* Reviews Grid */
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .review-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .review-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 400px;
+            background-size: cover;
+            background-position: center;
+            background-color: #e2e8f0;
+            position: relative;
+        }
+
+        .rating-overlay {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 18px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .review-content {
+            padding: 20px;
+        }
+
+        .movie-title {
+            color: #2d3748;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .movie-year {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .review-text {
+            color: #4a5568;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .review-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .reviewer-name {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .review-date {
+            color: #a0aec0;
+            font-size: 0.85rem;
+        }
+
+        .delete-btn {
+            background-color: #fc8181;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .delete-btn:hover {
+            background-color: #f56565;
+        }
+
+        /* Featured Section */
+        .featured-movie {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .featured-poster {
+            height: 500px;
+            background-size: cover;
+            background-position: center;
+            background-color: #e2e8f0;
+        }
+
+        .featured-content {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .featured-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            width: fit-content;
+        }
+
+        .featured-title {
+            color: #2d3748;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .featured-year {
+            color: #718096;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .featured-rating {
+            font-size: 2rem;
+            color: #fbbf24;
+            margin-bottom: 20px;
+        }
+
+        .featured-review {
+            color: #4a5568;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .featured-reviewer {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #718096;
+            font-size: 1rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .empty-state h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        /* Review Detail Modal */
+        .review-detail-modal .modal-content {
+            max-width: 800px;
+        }
+
+        .review-detail-header {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .review-detail-poster {
+            width: 100%;
+            height: 350px;
+            background-size: cover;
+            background-position: center;
+            background-color: #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .review-detail-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .review-detail-title {
+            color: #2d3748;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .review-detail-year {
+            color: #718096;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .review-detail-rating {
+            font-size: 2rem;
+            color: #fbbf24;
+            margin-bottom: 20px;
+        }
+
+        .review-detail-meta {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .review-detail-date {
+            color: #a0aec0;
+            font-size: 0.95rem;
+        }
+
+        .review-detail-section {
+            margin-bottom: 25px;
+        }
+
+        .review-detail-section h3 {
+            color: #2d3748;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .review-detail-section h3::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+        .review-detail-text {
+            color: #4a5568;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+
+        .review-detail-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .review-detail-actions .btn {
+            flex: 1;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 6px 20px rgba(72, 187, 120, 0.6);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 6px 20px rgba(252, 129, 129, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .featured-movie {
+                grid-template-columns: 1fr;
+            }
+
+            .featured-poster {
+                height: 300px;
+            }
+
+            .featured-content {
+                padding: 25px;
+            }
+
+            .featured-title {
+                font-size: 1.8rem;
+            }
+
+            nav {
+                gap: 5px;
+            }
+
+            .nav-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+
+            .user-info {
+                position: static;
+                justify-content: center;
+                margin-top: 10px;
+            }
+
+            .logo-section {
+                margin-bottom: 20px;
+            }
+
+            .review-detail-header {
+                grid-template-columns: 1fr;
+            }
+
+            .review-detail-poster {
+                height: 300px;
+            }
+
+            .review-detail-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-box">
+            <div class="login-logo">
+                <h1>🎬 FilmBox</h1>
+                <p>Movie Reviews Platform</p>
+            </div>
+            <div class="login-error" id="loginError">
+                Invalid username or password. Please try again.
+            </div>
+            <form id="loginForm">
+                <div class="login-form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required autocomplete="username">
+                </div>
+                <div class="login-form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="login-btn">Login</button>
+            </form>
+            <div class="toggle-form">
+                Don't have an account? <a href="#" id="showSignup">Sign Up</a>
+            </div>
+        </div>
+
+        <div class="login-box" id="signupBox" style="display: none;">
+            <div class="login-logo">
+                <h1>🎬 FilmBox</h1>
+                <p>Create Your Account</p>
+            </div>
+            <div class="login-error" id="signupError">
+                Username already exists. Please choose another.
+            </div>
+            <div class="login-info" id="signupSuccess" style="display: none; background-color: #c6f6d5; color: #22543d;">
+                Account created successfully! You can now login.
+            </div>
+            <form id="signupForm">
+                <div class="login-form-group">
+                    <label for="signupUsername">Username</label>
+                    <input type="text" id="signupUsername" required autocomplete="username" minlength="3">
+                </div>
+                <div class="login-form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required autocomplete="new-password" minlength="6">
+                </div>
+                <div class="login-form-group">
+                    <label for="signupConfirmPassword">Confirm Password</label>
+                    <input type="password" id="signupConfirmPassword" required autocomplete="new-password" minlength="6">
+                </div>
+                <button type="submit" class="login-btn">Create Account</button>
+            </form>
+            <div class="toggle-form">
+                Already have an account? <a href="#" id="showLogin">Login</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div class="app-container" id="appContainer">
+        <header>
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1>🎬 FilmBox</h1>
+                    <p>Share your favorite movie moments</p>
+                    <div class="user-info">
+                        <span class="username-display" id="usernameDisplay"></span>
+                        <button class="logout-btn" id="logoutBtn">Logout</button>
+                    </div>
+                </div>
+                <nav>
+                    <button class="nav-btn active" data-page="home">Home</button>
+                    <button class="nav-btn" data-page="reviews">All Reviews</button>
+                    <button class="nav-btn" data-page="popular">Popular This Week</button>
+                    <button class="nav-btn" data-page="trending">Trending</button>
+                    <button class="nav-btn" data-page="profile">Profile</button>
+                </nav>
+            </div>
+        </header>
+
+        <div class="container">
+            <!-- Home Page -->
+            <div id="homePage" class="page-section active">
+                <div class="page-header">
+                    <h2>Welcome to FilmBox</h2>
+                    <p>Discover the latest movie reviews and trending films</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalReviews">0</div>
+                        <div class="stat-label">Total Reviews</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="avgRating">0</div>
+                        <div class="stat-label">Average Rating</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="thisWeek">0</div>
+                        <div class="stat-label">This Week</div>
+                    </div>
+                </div>
+
+                <div id="featuredSection"></div>
+
+                <h3 style="color: white; margin: 30px 0 20px 0; font-size: 1.8rem;">Recent Reviews</h3>
+                <div id="recentReviews" class="reviews-grid"></div>
+            </div>
+
+            <!-- All Reviews Page -->
+            <div id="reviewsPage" class="page-section">
+                <div class="page-header">
+                    <h2>All Reviews</h2>
+                    <p>Browse through all movie reviews in our collection</p>
+                </div>
+                <div class="filter-section">
+                    <span class="filter-label">Sort by:</span>
+                    <select class="filter-select" id="allReviewsFilter">
+                        <option value="newest">Newest to Oldest</option>
+                        <option value="oldest">Oldest to Newest</option>
+                        <option value="rating-high">Rating: 5-1 Stars</option>
+                        <option value="rating-low">Rating: 1-5 Stars</option>
+                    </select>
+                </div>
+                <div id="allReviewsContainer" class="reviews-grid"></div>
+            </div>
+
+            <!-- Popular This Week Page -->
+            <div id="popularPage" class="page-section">
+                <div class="page-header">
+                    <h2>Popular This Week</h2>
+                    <p>Most highly rated movies from the past 7 days</p>
+                </div>
+                <div class="filter-section">
+                    <span class="filter-label">Sort by:</span>
+                    <select class="filter-select" id="popularFilter">
+                        <option value="rating-high">Rating: 5-1 Stars</option>
+                        <option value="rating-low">Rating: 1-5 Stars</option>
+                        <option value="newest">Newest to Oldest</option>
+                        <option value="oldest">Oldest to Newest</option>
+                    </select>
+                </div>
+                <div id="popularContainer" class="reviews-grid"></div>
+            </div>
+
+            <!-- Trending Page -->
+            <div id="trendingPage" class="page-section">
+                <div class="page-header">
+                    <h2>Trending Now</h2>
+                    <p>Recently reviewed movies gaining attention</p>
+                </div>
+                <div class="filter-section">
+                    <span class="filter-label">Sort by:</span>
+                    <select class="filter-select" id="trendingFilter">
+                        <option value="rating-high">Rating: 5-1 Stars</option>
+                        <option value="rating-low">Rating: 1-5 Stars</option>
+                        <option value="newest">Newest to Oldest</option>
+                        <option value="oldest">Oldest to Newest</option>
+                    </select>
+                </div>
+                <div id="trendingContainer" class="reviews-grid"></div>
+            </div>
+
+            <!-- Profile Page -->
+            <div id="profilePage" class="page-section">
+                <div class="page-header">
+                    <h2>My Profile</h2>
+                    <p>View your activity and statistics</p>
+                </div>
+
+                <div class="profile-grid">
+                    <div class="profile-card">
+                        <div class="profile-avatar" id="profileAvatar">U</div>
+                        <div class="profile-username" id="profileUsername">Username</div>
+                        <div class="profile-joined" id="profileJoined">Member since Jan 2024</div>
+                        
+                        <div class="profile-stats-grid">
+                            <div class="profile-stat-item">
+                                <div class="profile-stat-number" id="userTotalReviews">0</div>
+                                <div class="profile-stat-label">Reviews</div>
+                            </div>
+                            <div class="profile-stat-item">
+                                <div class="profile-stat-number" id="userAvgRating">0</div>
+                                <div class="profile-stat-label">Avg Rating</div>
+                            </div>
+                            <div class="profile-stat-item">
+                                <div class="profile-stat-number" id="userThisMonth">0</div>
+                                <div class="profile-stat-label">This Month</div>
+                            </div>
+                            <div class="profile-stat-item">
+                                <div class="profile-stat-number" id="userFavoriteGenre">N/A</div>
+                                <div class="profile-stat-label">Top Rating</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-card">
+                        <h3 class="profile-section-title">Recent Activity</h3>
+                        <div class="activity-list" id="activityList">
+                            <div class="empty-state" style="padding: 40px 20px;">
+                                <h3>No activity yet</h3>
+                                <p>Start reviewing movies to see your activity here!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-card">
+                    <h3 class="profile-section-title">Your Top Rated Movies</h3>
+                    <div class="favorites-grid" id="favoritesGrid">
+                        <div class="empty-state" style="padding: 40px 20px;">
+                            <h3>No reviews yet</h3>
+                            <p>Add some movie reviews to see your favorites!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Add Review Button -->
+        <button class="floating-add-btn" id="openModalBtn">+</button>
+
+        <!-- Add Review Modal -->
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal-content">
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+                <h2>Add a Review</h2>
+                <form id="reviewForm">
+                    <div class="form-group">
+                        <label for="movieTitle">Movie Title</label>
+                        <input type="text" id="movieTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="movieYear">Year</label>
+                        <input type="number" id="movieYear" min="1888" max="2030" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="posterUrl">Poster URL (optional)</label>
+                        <input type="url" id="posterUrl" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label>Rating</label>
+                        <div class="star-rating" id="starRating">
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
+                        </div>
+                        <input type="hidden" id="rating" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="reviewText">Your Review</label>
+                        <textarea id="reviewText" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="reviewerName">Your Name</label>
+                        <input type="text" id="reviewerName" required>
+                    </div>
+                    <button type="submit" class="btn">Publish Review</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Review Detail Modal -->
+        <div class="modal-overlay review-detail-modal" id="reviewDetailModal">
+            <div class="modal-content">
+                <button class="close-btn" id="closeDetailBtn">&times;</button>
+                <div id="reviewDetailContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Authentication Manager
+        class AuthManager {
+            constructor() {
+                this.currentUser = null;
+                this.loadUsers();
+            }
+
+            loadUsers() {
+                const stored = localStorage.getItem('filmboxUsers');
+                this.users = stored ? JSON.parse(stored) : {};
+                
+                const userMetadata = localStorage.getItem('filmboxUserMetadata');
+                this.userMetadata = userMetadata ? JSON.parse(userMetadata) : {};
+            }
+
+            saveUsers() {
+                localStorage.setItem('filmboxUsers', JSON.stringify(this.users));
+                localStorage.setItem('filmboxUserMetadata', JSON.stringify(this.userMetadata));
+            }
+
+            signup(username, password) {
+                if (this.users[username]) {
+                    return { success: false, message: 'Username already exists' };
+                }
+
+                if (username.length < 3) {
+                    return { success: false, message: 'Username must be at least 3 characters' };
+                }
+
+                if (password.length < 6) {
+                    return { success: false, message: 'Password must be at least 6 characters' };
+                }
+
+                this.users[username] = password;
+                this.userMetadata[username] = {
+                    joinDate: new Date().toISOString(),
+                    lastLogin: new Date().toISOString()
+                };
+                this.saveUsers();
+                return { success: true, message: 'Account created successfully' };
+            }
+
+            login(username, password) {
+                if (this.users[username] && this.users[username] === password) {
+                    this.currentUser = username;
+                    sessionStorage.setItem('filmboxUser', username);
+                    
+                    if (this.userMetadata[username]) {
+                        this.userMetadata[username].lastLogin = new Date().toISOString();
+                        this.saveUsers();
+                    }
+                    
+                    return true;
+                }
+                return false;
+            }
+
+            logout() {
+                this.currentUser = null;
+                sessionStorage.removeItem('filmboxUser');
+            }
+
+            isLoggedIn() {
+                return this.currentUser !== null || sessionStorage.getItem('filmboxUser') !== null;
+            }
+
+            restoreSession() {
+                const savedUser = sessionStorage.getItem('filmboxUser');
+                if (savedUser && this.users[savedUser]) {
+                    this.currentUser = savedUser;
+                    return true;
+                }
+                return false;
+            }
+
+            getCurrentUserMetadata() {
+                return this.userMetadata[this.currentUser] || { joinDate: new Date().toISOString() };
+            }
+        }
+
+        // Movie Review Class
+        class MovieReview {
+            constructor(id, title, year, posterUrl, rating, reviewText, reviewerName, username) {
+                this.id = id;
+                this.title = title;
+                this.year = year;
+                this.posterUrl = posterUrl || 'https://via.placeholder.com/300x400/e2e8f0/667eea?text=No+Poster';
+                this.rating = rating;
+                this.reviewText = reviewText;
+                this.reviewerName = reviewerName;
+                this.username = username;
+                this.date = new Date();
+            }
+
+            getStarDisplay() {
+                return '★'.repeat(this.rating) + '✰'.repeat(5 - this.rating);
+            }
+
+            getFormattedDate() {
+                const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                return this.date.toLocaleDateString('en-US', options);
+            }
+
+            isThisWeek() {
+                const weekAgo = new Date();
+                weekAgo.setDate(weekAgo.getDate() - 7);
+                return this.date >= weekAgo;
+            }
+
+            isThisMonth() {
+                const now = new Date();
+                return this.date.getMonth() === now.getMonth() && 
+                       this.date.getFullYear() === now.getFullYear();
+            }
+
+            toHTML(showDelete = false) {
+                const deleteBtn = showDelete ? 
+                    `<button class="delete-btn" onclick="reviewManager.deleteReview(${this.id})">Delete</button>` : '';
+                
+                return `
+                    <div class="review-card" data-id="${this.id}" onclick="reviewManager.showReviewDetail(${this.id})">
+                        <div class="movie-poster" style="background-image: url('${this.posterUrl}')">
+                            <div class="rating-overlay">${this.getStarDisplay()}</div>
+                        </div>
+                        <div class="review-content">
+                            <h3 class="movie-title">${this.title}</h3>
+                            <div class="movie-year">${this.year}</div>
+                            <p class="review-text">${this.reviewText.substring(0, 150)}${this.reviewText.length > 150 ? '...' : ''}</p>
+                            <div class="review-meta">
+                                <div>
+                                    <div class="reviewer-name">${this.reviewerName}</div>
+                                    <div class="review-date">${this.getFormattedDate()}</div>
+                                </div>
+                            </div>
+                            ${deleteBtn}
+                        </div>
+                    </div>
+                `;
+            }
+
+            toDetailHTML() {
+                const isOwner = this.username === authManager.currentUser;
+                const actionButtons = isOwner ? 
+                    `<div class="review-detail-actions">
+                        <button class="btn btn-secondary" onclick="reviewManager.editReview(${this.id})">Edit Review</button>
+                        <button class="btn btn-danger" onclick="reviewManager.deleteReview(${this.id}); reviewManager.closeReviewDetail();">Delete Review</button>
+                    </div>` : '';
+                
+                return `
+                    <div class="review-detail-header">
+                        <div class="review-detail-poster" style="background-image: url('${this.posterUrl}')"></div>
+                        <div class="review-detail-info">
+                            <h2 class="review-detail-title">${this.title}</h2>
+                            <div class="review-detail-year">${this.year}</div>
+                            <div class="review-detail-rating">${this.getStarDisplay()}</div>
+                            <div class="review-detail-meta">Reviewed by ${this.reviewerName}</div>
+                            <div class="review-detail-date">${this.getFormattedDate()}</div>
+                        </div>
+                    </div>
+                    <div class="review-detail-section">
+                        <h3>Review</h3>
+                        <div class="review-detail-text">${this.reviewText}</div>
+                    </div>
+                    ${actionButtons}
+                `;
+            }
+
+            toFeaturedHTML() {
+                return `
+                    <div class="featured-movie" onclick="reviewManager.showReviewDetail(${this.id})" style="cursor: pointer;">
+                        <div class="featured-poster" style="background-image: url('${this.posterUrl}')"></div>
+                        <div class="featured-content">
+                            <div class="featured-badge">⭐ Featured Review</div>
+                            <h3 class="featured-title">${this.title}</h3>
+                            <div class="featured-year">${this.year}</div>
+                            <div class="featured-rating">${this.getStarDisplay()}</div>
+                            <p class="featured-review">${this.reviewText.substring(0, 200)}${this.reviewText.length > 200 ? '...' : ''}</p>
+                            <div class="featured-reviewer">— ${this.reviewerName}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            toFavoriteHTML() {
+                return `
+                    <div class="favorite-item" onclick="reviewManager.showReviewDetail(${this.id})">
+                        <div class="favorite-rating">${this.getStarDisplay()}</div>
+                        <div class="favorite-title">${this.title}</div>
+                        <div class="favorite-year">${this.year}</div>
+                    </div>
+                `;
+            }
+
+            toActivityHTML() {
+                return `
+                    <div class="activity-item" onclick="reviewManager.showReviewDetail(${this.id})" style="cursor: pointer;">
+                        <div class="activity-icon">★</div>
+                        <div class="activity-content">
+                            <div class="activity-title">Reviewed "${this.title}"</div>
+                            <div class="activity-date">${this.getFormattedDate()} • ${this.getStarDisplay()}</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Review Manager Class
+        class ReviewManager {
+            constructor() {
+                this.reviews = [];
+                this.nextId = 1;
+                this.currentFilters = {
+                    allReviews: 'newest',
+                    popular: 'rating-high',
+                    trending: 'rating-high'
+                };
+                this.loadFromStorage();
+                this.initDetailModal();
+            }
+
+            initDetailModal() {
+                const closeBtn = document.getElementById('closeDetailBtn');
+                const modal = document.getElementById('reviewDetailModal');
+                
+                closeBtn.addEventListener('click', () => this.closeReviewDetail());
+                
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        this.closeReviewDetail();
+                    }
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && modal.classList.contains('active')) {
+                        this.closeReviewDetail();
+                    }
+                });
+            }
+
+            showReviewDetail(id) {
+                const review = this.reviews.find(r => r.id === id);
+                if (review) {
+                    const modal = document.getElementById('reviewDetailModal');
+                    const content = document.getElementById('reviewDetailContent');
+                    content.innerHTML = review.toDetailHTML();
+                    modal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+
+            closeReviewDetail() {
+                const modal = document.getElementById('reviewDetailModal');
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            editReview(id) {
+                const review = this.reviews.find(r => r.id === id);
+                if (review && review.username === authManager.currentUser) {
+                    // Close detail modal
+                    this.closeReviewDetail();
+                    
+                    // Populate the form with existing data
+                    document.getElementById('movieTitle').value = review.title;
+                    document.getElementById('movieYear').value = review.year;
+                    document.getElementById('posterUrl').value = review.posterUrl;
+                    document.getElementById('rating').value = review.rating;
+                    document.getElementById('reviewText').value = review.reviewText;
+                    document.getElementById('reviewerName').value = review.reviewerName;
+                    
+                    // Update star rating display
+                    starRating.currentRating = review.rating;
+                    starRating.updateStars();
+                    
+                    // Change form title and button text
+                    const modalTitle = document.querySelector('#modalOverlay h2');
+                    const submitBtn = document.querySelector('#reviewForm .btn');
+                    modalTitle.textContent = 'Edit Review';
+                    submitBtn.textContent = 'Update Review';
+                    
+                    // Store the review ID being edited
+                    document.getElementById('reviewForm').dataset.editingId = id;
+                    
+                    // Open the modal
+                    modal.open();
+                }
+            }
+
+            updateReview(id, title, year, posterUrl, rating, reviewText, reviewerName) {
+                const review = this.reviews.find(r => r.id === id);
+                if (review && review.username === authManager.currentUser) {
+                    review.title = title;
+                    review.year = year;
+                    review.posterUrl = posterUrl || 'https://via.placeholder.com/300x400/e2e8f0/667eea?text=No+Poster';
+                    review.rating = rating;
+                    review.reviewText = reviewText;
+                    review.reviewerName = reviewerName;
+                    // Keep the original date
+                    
+                    this.saveToStorage();
+                    this.renderAll();
+                    return review;
+                }
+                return null;
+            }
+
+            addReview(title, year, posterUrl, rating, reviewText, reviewerName) {
+                const review = new MovieReview(
+                    this.nextId++,
+                    title,
+                    year,
+                    posterUrl,
+                    rating,
+                    reviewText,
+                    reviewerName,
+                    authManager.currentUser
+                );
+                this.reviews.unshift(review);
+                this.saveToStorage();
+                this.renderAll();
+                return review;
+            }
+
+            deleteReview(id) {
+                const review = this.reviews.find(r => r.id === id);
+                if (review && review.username === authManager.currentUser) {
+                    this.reviews = this.reviews.filter(review => review.id !== id);
+                    this.saveToStorage();
+                    this.renderAll();
+                }
+            }
+
+            saveToStorage() {
+                localStorage.setItem('movieReviews', JSON.stringify({
+                    reviews: this.reviews,
+                    nextId: this.nextId
+                }));
+            }
+
+            loadFromStorage() {
+                const data = localStorage.getItem('movieReviews');
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    this.nextId = parsed.nextId || 1;
+                    this.reviews = parsed.reviews.map(r => {
+                        const review = new MovieReview(
+                            r.id, r.title, r.year, r.posterUrl, 
+                            r.rating, r.reviewText, r.reviewerName, r.username
+                        );
+                        review.date = new Date(r.date);
+                        return review;
+                    });
+                }
+            }
+
+            sortReviews(reviews, sortBy) {
+                const sorted = [...reviews];
+                
+                switch(sortBy) {
+                    case 'newest':
+                        return sorted.sort((a, b) => b.date - a.date);
+                    case 'oldest':
+                        return sorted.sort((a, b) => a.date - b.date);
+                    case 'rating-high':
+                        return sorted.sort((a, b) => b.rating - a.rating || b.date - a.date);
+                    case 'rating-low':
+                        return sorted.sort((a, b) => a.rating - b.rating || b.date - a.date);
+                    default:
+                        return sorted;
+                }
+            }
+
+            getUserReviews(username) {
+                return this.reviews.filter(r => r.username === username);
+            }
+
+            getRecentReviews(limit = 6) {
+                return this.reviews.slice(0, limit);
+            }
+
+            getPopularThisWeek() {
+                return this.reviews.filter(r => r.isThisWeek());
+            }
+
+            getTrending() {
+                return this.reviews.slice(0, 12);
+            }
+
+            getStats() {
+                const total = this.reviews.length;
+                const thisWeek = this.reviews.filter(r => r.isThisWeek()).length;
+                const avgRating = total > 0 
+                    ? (this.reviews.reduce((sum, r) => sum + r.rating, 0) / total).toFixed(1)
+                    : 0;
+                
+                return { total, thisWeek, avgRating };
+            }
+
+            getUserStats(username) {
+                const userReviews = this.getUserReviews(username);
+                const total = userReviews.length;
+                const thisMonth = userReviews.filter(r => r.isThisMonth()).length;
+                const avgRating = total > 0 
+                    ? (userReviews.reduce((sum, r) => sum + r.rating, 0) / total).toFixed(1)
+                    : 0;
+                const topRating = total > 0 
+                    ? Math.max(...userReviews.map(r => r.rating))
+                    : 0;
+                
+                return { total, thisMonth, avgRating, topRating };
+            }
+
+            renderAll() {
+                this.renderHome();
+                this.renderAllReviews();
+                this.renderPopular();
+                this.renderTrending();
+                this.renderProfile();
+                this.updateStats();
+            }
+
+            renderHome() {
+                const featuredSection = document.getElementById('featuredSection');
+                if (this.reviews.length > 0) {
+                    const featured = this.reviews.reduce((max, r) => r.rating > max.rating ? r : max);
+                    featuredSection.innerHTML = featured.toFeaturedHTML();
+                } else {
+                    featuredSection.innerHTML = '';
+                }
+
+                const recentContainer = document.getElementById('recentReviews');
+                const recent = this.getRecentReviews();
+                
+                if (recent.length === 0) {
+                    recentContainer.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No reviews yet</h3>
+                            <p>Be the first to add a movie review!</p>
+                        </div>
+                    `;
+                } else {
+                    recentContainer.innerHTML = recent.map(review => review.toHTML()).join('');
+                }
+            }
+
+            renderAllReviews() {
+                const container = document.getElementById('allReviewsContainer');
+                
+                if (this.reviews.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No reviews yet</h3>
+                            <p>Be the first to add a movie review!</p>
+                        </div>
+                    `;
+                } else {
+                    const sorted = this.sortReviews(this.reviews, this.currentFilters.allReviews);
+                    container.innerHTML = sorted.map(review => review.toHTML()).join('');
+                }
+            }
+
+            renderPopular() {
+                const container = document.getElementById('popularContainer');
+                const popular = this.getPopularThisWeek();
+                
+                if (popular.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No reviews this week</h3>
+                            <p>Check back soon for popular movies!</p>
+                        </div>
+                    `;
+                } else {
+                    const sorted = this.sortReviews(popular, this.currentFilters.popular);
+                    container.innerHTML = sorted.map(review => review.toHTML()).join('');
+                }
+            }
+
+            renderTrending() {
+                const container = document.getElementById('trendingContainer');
+                const trending = this.getTrending();
+                
+                if (trending.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No trending movies</h3>
+                            <p>Add some reviews to see what's trending!</p>
+                        </div>
+                    `;
+                } else {
+                    const sorted = this.sortReviews(trending, this.currentFilters.trending);
+                    container.innerHTML = sorted.map(review => review.toHTML()).join('');
+                }
+            }
+
+            renderProfile() {
+                const username = authManager.currentUser;
+                const userReviews = this.getUserReviews(username);
+                const userStats = this.getUserStats(username);
+                const userMetadata = authManager.getCurrentUserMetadata();
+
+                // Update profile header
+                document.getElementById('profileUsername').textContent = username;
+                document.getElementById('profileAvatar').textContent = username.charAt(0).toUpperCase();
+                
+                const joinDate = new Date(userMetadata.joinDate);
+                const joinDateStr = joinDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                document.getElementById('profileJoined').textContent = `Member since ${joinDateStr}`;
+
+                // Update user stats
+                document.getElementById('userTotalReviews').textContent = userStats.total;
+                document.getElementById('userAvgRating').textContent = userStats.avgRating;
+                document.getElementById('userThisMonth').textContent = userStats.thisMonth;
+                document.getElementById('userFavoriteGenre').textContent = userStats.topRating || 'N/A';
+
+                // Render recent activity
+                const activityList = document.getElementById('activityList');
+                if (userReviews.length === 0) {
+                    activityList.innerHTML = `
+                        <div class="empty-state" style="padding: 40px 20px;">
+                            <h3>No activity yet</h3>
+                            <p>Start reviewing movies to see your activity here!</p>
+                        </div>
+                    `;
+                } else {
+                    const recentActivity = userReviews.slice(0, 5);
+                    activityList.innerHTML = recentActivity.map(review => review.toActivityHTML()).join('');
+                }
+
+                // Render favorites (top rated)
+                const favoritesGrid = document.getElementById('favoritesGrid');
+                if (userReviews.length === 0) {
+                    favoritesGrid.innerHTML = `
+                        <div class="empty-state" style="padding: 40px 20px;">
+                            <h3>No reviews yet</h3>
+                            <p>Add some movie reviews to see your favorites!</p>
+                        </div>
+                    `;
+                } else {
+                    const topRated = this.sortReviews(userReviews, 'rating-high').slice(0, 6);
+                    favoritesGrid.innerHTML = topRated.map(review => review.toFavoriteHTML()).join('');
+                }
+            }
+
+            updateStats() {
+                const stats = this.getStats();
+                document.getElementById('totalReviews').textContent = stats.total;
+                document.getElementById('avgRating').textContent = stats.avgRating;
+                document.getElementById('thisWeek').textContent = stats.thisWeek;
+            }
+        }
+
+        // Star Rating Handler Class
+        class StarRatingHandler {
+            constructor(containerId, inputId) {
+                this.container = document.getElementById(containerId);
+                this.input = document.getElementById(inputId);
+                this.currentRating = 0;
+                this.init();
+            }
+
+            init() {
+                const stars = this.container.querySelectorAll('.star');
+                
+                stars.forEach(star => {
+                    star.addEventListener('click', () => {
+                        this.currentRating = parseInt(star.dataset.rating);
+                        this.input.value = this.currentRating;
+                        this.updateStars();
+                    });
+
+                    star.addEventListener('mouseenter', () => {
+                        const hoverRating = parseInt(star.dataset.rating);
+                        this.highlightStars(hoverRating);
+                    });
+                });
+
+                this.container.addEventListener('mouseleave', () => {
+                    this.updateStars();
+                });
+            }
+
+            highlightStars(rating) {
+                const stars = this.container.querySelectorAll('.star');
+                stars.forEach((star, index) => {
+                    if (index < rating) {
+                        star.classList.add('active');
+                    } else {
+                        star.classList.remove('active');
+                    }
+                });
+            }
+
+            updateStars() {
+                this.highlightStars(this.currentRating);
+            }
+
+            reset() {
+                this.currentRating = 0;
+                this.input.value = 0;
+                this.updateStars();
+            }
+        }
+
+        // Modal Handler Class
+        class ModalHandler {
+            constructor(overlayId, openBtnId, closeBtnId) {
+                this.overlay = document.getElementById(overlayId);
+                this.openBtn = document.getElementById(openBtnId);
+                this.closeBtn = document.getElementById(closeBtnId);
+                this.init();
+            }
+
+            init() {
+                this.openBtn.addEventListener('click', () => this.open());
+                this.closeBtn.addEventListener('click', () => this.close());
+                
+                this.overlay.addEventListener('click', (e) => {
+                    if (e.target === this.overlay) {
+                        this.close();
+                    }
+                }); 
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && this.overlay.classList.contains('active')) {
+                        this.close();
+                    }
+                });
+            }
+
+            open() {
+                this.overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            close() {
+                this.overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Page Navigation Handler
+        class PageNavigator {
+            constructor() {
+                this.currentPage = 'home';
+                this.init();
+            }
+
+            init() {
+                const navButtons = document.querySelectorAll('.nav-btn');
+                navButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const page = btn.dataset.page;
+                        this.navigateTo(page);
+                    });
+                });
+            }
+
+            navigateTo(page) {
+                document.querySelectorAll('.page-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                document.getElementById(`${page}Page`).classList.add('active');
+                document.querySelector(`[data-page="${page}"]`).classList.add('active');
+
+                this.currentPage = page;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                // Refresh profile page when navigating to it
+                if (page === 'profile' && reviewManager) {
+                    reviewManager.renderProfile();
+                }
+            }
+        }
+
+        // Initialize Authentication
+        const authManager = new AuthManager();
+        let reviewManager, starRating, modal, pageNavigator;
+
+        // Check if user is already logged in
+        if (authManager.restoreSession()) {
+            showApp();
+        }
+
+        // Login Form Handler
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+
+            if (authManager.login(username, password)) {
+                errorDiv.classList.remove('show');
+                showApp();
+            } else {
+                errorDiv.classList.add('show');
+            }
+        });
+
+        // Signup Form Handler
+        document.getElementById('signupForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('signupUsername').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+            const errorDiv = document.getElementById('signupError');
+            const successDiv = document.getElementById('signupSuccess');
+
+            errorDiv.classList.remove('show');
+            successDiv.style.display = 'none';
+
+            if (password !== confirmPassword) {
+                errorDiv.textContent = 'Passwords do not match. Please try again.';
+                errorDiv.classList.add('show');
+                return;
+            }
+
+            const result = authManager.signup(username, password);
+            
+            if (result.success) {
+                successDiv.style.display = 'block';
+                document.getElementById('signupForm').reset();
+                
+                setTimeout(() => {
+                    toggleToLogin();
+                }, 2000);
+            } else {
+                errorDiv.textContent = result.message;
+                errorDiv.classList.add('show');
+            }
+        });
+
+        // Toggle between login and signup forms
+        document.getElementById('showSignup').addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleToSignup();
+        });
+
+        document.getElementById('showLogin').addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleToLogin();
+        });
+
+        function toggleToSignup() {
+            document.querySelector('.login-box').style.display = 'none';
+            document.getElementById('signupBox').style.display = 'block';
+            document.getElementById('loginError').classList.remove('show');
+            document.getElementById('loginForm').reset();
+        }
+
+        function toggleToLogin() {
+            document.querySelector('.login-box').style.display = 'block';
+            document.getElementById('signupBox').style.display = 'none';
+            document.getElementById('signupError').classList.remove('show');
+            document.getElementById('signupSuccess').style.display = 'none';
+            document.getElementById('signupForm').reset();
+        }
+
+        // Logout Handler
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            authManager.logout();
+            hideApp();
+        });
+
+        function showApp() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('appContainer').classList.add('active');
+            document.getElementById('usernameDisplay').textContent = `👤 ${authManager.currentUser}`;
+            
+            if (!reviewManager) {
+                reviewManager = new ReviewManager();
+                starRating = new StarRatingHandler('starRating', 'rating');
+                modal = new ModalHandler('modalOverlay', 'openModalBtn', 'closeModalBtn');
+                pageNavigator = new PageNavigator();
+
+                document.getElementById('allReviewsFilter').addEventListener('change', (e) => {
+                    reviewManager.currentFilters.allReviews = e.target.value;
+                    reviewManager.renderAllReviews();
+                });
+
+                document.getElementById('popularFilter').addEventListener('change', (e) => {
+                    reviewManager.currentFilters.popular = e.target.value;
+                    reviewManager.renderPopular();
+                });
+
+                document.getElementById('trendingFilter').addEventListener('change', (e) => {
+                    reviewManager.currentFilters.trending = e.target.value;
+                    reviewManager.renderTrending();
+                });
+
+                document.getElementById('reviewForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    
+                    const title = document.getElementById('movieTitle').value;
+                    const year = document.getElementById('movieYear').value;
+                    const posterUrl = document.getElementById('posterUrl').value;
+                    const rating = parseInt(document.getElementById('rating').value);
+                    const reviewText = document.getElementById('reviewText').value;
+                    const reviewerName = document.getElementById('reviewerName').value;
+
+                    if (rating === 0) {
+                        alert('Please select a rating!');
+                        return;
+                    }
+
+                    const form = e.target;
+                    const editingId = form.dataset.editingId;
+                    
+                    if (editingId) {
+                        // Update existing review
+                        reviewManager.updateReview(parseInt(editingId), title, year, posterUrl, rating, reviewText, reviewerName);
+                        delete form.dataset.editingId;
+                    } else {
+                        // Add new review
+                        reviewManager.addReview(title, year, posterUrl, rating, reviewText, reviewerName);
+                    }
+                    
+                    // Reset form and modal
+                    e.target.reset();
+                    starRating.reset();
+                    modal.close();
+                    
+                    // Reset modal title and button text
+                    document.querySelector('#modalOverlay h2').textContent = 'Add a Review';
+                    document.querySelector('#reviewForm .btn').textContent = 'Publish Review';
+
+                    pageNavigator.navigateTo('home');
+                });
+
+                reviewManager.renderAll();
+            } else {
+                document.getElementById('usernameDisplay').textContent = `👤 ${authManager.currentUser}`;
+                reviewManager.renderProfile();
+            }
+        }
+
+        function hideApp() {
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('appContainer').classList.remove('active');
+            
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('loginError').classList.remove('show');
+        }
+    </script>
+</body>
+</html>
