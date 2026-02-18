@@ -53,7 +53,7 @@ FilmBox is intentionally a single-file app with no external dependencies or fram
 
 ---
 
-## 📸 Pages Overview
+## Pages Overview
 
 | Page | Description |
 |------|-------------|
